@@ -1,0 +1,60 @@
+version: "3.0"
+services:
+  control_node:
+      hostname: control_node
+      container_name: control_node
+      build: ./control_node/
+      # image: ubuntu:18.04
+      command: tail -F anything
+      ports: 
+      - ${CONTROL_NODE_PORT_SSHD}:22
+      - ${CONTROL_NODE_PORT_TTYD}:7681
+      privileged: true
+      # volumes:
+      # - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      # - ${CONFIG}:/config
+      # - ${ANSIBLE_HOME}/shared:/shared
+      # - ${ANSIBLE_HOME}/ubuntu-c/ansible:/home/ansible
+      # - ${ANSIBLE_HOME}/ubuntu-c/root:/root
+      networks:
+      - labnet.io
+
+  ubuntu-c:
+      hostname: ubuntu-a
+      container_name: ubuntu-a
+      # build: ./ubuntu/
+      image: ubuntu:18.04
+      command: tail -F anything
+      ports: 
+      - ${UBUNTU_A_PORT_SSHD}:22
+      - ${UBUNTU_A_PORT_TTYD}:7681
+      privileged: true
+      # volumes:
+      # - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      # - ${CONFIG}:/config
+      # - ${ANSIBLE_HOME}/shared:/shared
+      # - ${ANSIBLE_HOME}/ubuntu-c/ansible:/home/ansible
+      # - ${ANSIBLE_HOME}/ubuntu-c/root:/root
+      networks:
+      - labnet.io
+
+#   centos-a:
+#     hostname: centos-a
+#     container_name: centos-a
+#     image: centos:centos8
+#     ports: 
+#      - ${CENTOS_A_PORT_SSHD}:22
+#      - ${CENTOS_A_PORT_TTYD}:7681
+#     privileged: true
+#     # volumes:
+#     #  - /sys/fs/cgroup:/sys/fs/cgroup:ro
+#     #  - ${CONFIG}:/config
+#     #  - ${ANSIBLE_HOME}/shared:/shared
+#     #  - ${ANSIBLE_HOME}/centos1/ansible:/home/ansible
+#     #  - ${ANSIBLE_HOME}/centos1/root:/root
+#     networks:
+#      - labnet.io
+
+networks:
+  labnet.io:
+    name: labnet.io
