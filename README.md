@@ -12,7 +12,7 @@ ssh/ubuntu-b
 ssh/ubuntu-c  
 ssh/ubuntu-d  
 
-Download/clone the repository  
+Download/clone the repository to some suitable location (not your home directory)  
 
 Start the lab environment by running (in the ansible-lab directory) command:  
 docker-compose up -d --build  
