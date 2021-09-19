@@ -3,17 +3,29 @@ Lab environment for Ansible
 
 
 ## Prerequisits
-Create a folder in you home directory named ansible-lab
-Add the following subdirectories
+Create a folder in you home directory named ansible-lab  
+Add the following subdirectories:  
+shared  
+ssh/control_node  
+ssh/ubuntu-a  
+ssh/ubuntu-b  
+ssh/ubuntu-c  
+ssh/ubuntu-d  
 
+Download/clone the repository  
 
-su - ansible
+Start the lab environment by running (in the ansible-lab directory) command:  
+docker-compose up -d --build  
 
-ansible> ssh-keygen
+Enter the control node:   
+docker exec -it controlnode /bin/bash
 
-ssh-copy-id ubuntu-a etc.. from control node.
-ssh-copy-id ubuntu-a.labnet.io etc
+su - ansible  
 
-docker-compose up -d --build
+At first run, setup ssh:  
+ansible> ssh-keygen  
 
-docker-compose down
+ssh-copy-id ubuntu-a.labnet.io etc. for each managed node  
+
+Shut down the lab environment:  
+docker-compose down  
