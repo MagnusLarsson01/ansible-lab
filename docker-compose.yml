@@ -1,60 +1,83 @@
 version: "3.0"
 services:
   control_node:
-      hostname: control_node
-      container_name: control_node
+      hostname: controlnode
+      container_name: controlnode
       build: ./control_node/
-      # image: ubuntu:18.04
       command: tail -F anything
-      ports: 
-      - ${CONTROL_NODE_PORT_SSHD}:22
-      - ${CONTROL_NODE_PORT_TTYD}:7681
       privileged: true
-      # volumes:
-      # - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      # - ${CONFIG}:/config
-      # - ${ANSIBLE_HOME}/shared:/shared
-      # - ${ANSIBLE_HOME}/ubuntu-c/ansible:/home/ansible
-      # - ${ANSIBLE_HOME}/ubuntu-c/root:/root
+      volumes:
+      - ${CONTROL_NODE_SSH}:/home/ansible/.ssh
+      - ${SHARED_FOLDER}:/shared
       networks:
-      - labnet.io
+        labnet.io:
+            ipv4_address: 10.10.0.2 
 
-  ubuntu-c:
+  ubuntu-a:
       hostname: ubuntu-a
       container_name: ubuntu-a
-      # build: ./ubuntu/
-      image: ubuntu:18.04
+      build: ./ubuntu/
       command: tail -F anything
       ports: 
-      - ${UBUNTU_A_PORT_SSHD}:22
-      - ${UBUNTU_A_PORT_TTYD}:7681
+      - ${UBUNTU_A_WEBSERVER_PORT}:80
       privileged: true
-      # volumes:
-      # - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      # - ${CONFIG}:/config
-      # - ${ANSIBLE_HOME}/shared:/shared
-      # - ${ANSIBLE_HOME}/ubuntu-c/ansible:/home/ansible
-      # - ${ANSIBLE_HOME}/ubuntu-c/root:/root
+      volumes:
+      - ${UBUNTU_A_SSH}:/home/ansible/.ssh
+      - ${SHARED_FOLDER}/shared:/shared
       networks:
-      - labnet.io
+        labnet.io:
+            ipv4_address: 10.10.0.3 
 
-#   centos-a:
-#     hostname: centos-a
-#     container_name: centos-a
-#     image: centos:centos8
-#     ports: 
-#      - ${CENTOS_A_PORT_SSHD}:22
-#      - ${CENTOS_A_PORT_TTYD}:7681
-#     privileged: true
-#     # volumes:
-#     #  - /sys/fs/cgroup:/sys/fs/cgroup:ro
-#     #  - ${CONFIG}:/config
-#     #  - ${ANSIBLE_HOME}/shared:/shared
-#     #  - ${ANSIBLE_HOME}/centos1/ansible:/home/ansible
-#     #  - ${ANSIBLE_HOME}/centos1/root:/root
-#     networks:
-#      - labnet.io
+  ubuntu-b:
+      hostname: ubuntu-b
+      container_name: ubuntu-b
+      build: ./ubuntu/
+      command: tail -F anything
+      ports: 
+      - ${UBUNTU_B_APPSERVER_PORT}:8080
+      privileged: true
+      volumes:
+      - ${UBUNTU_B_SSH}:/home/ansible/.ssh
+      - ${SHARED_FOLDER}/shared:/shared
+      networks:
+        labnet.io:
+            ipv4_address: 10.10.0.4 
+
+  ubuntu-c:
+      hostname: ubuntu-c
+      container_name: ubuntu-c
+      build: ./ubuntu/
+      command: tail -F anything
+      ports: 
+      - ${UBUNTU_C_WEBSERVER_PORT}:80
+      privileged: true
+      volumes:
+      - ${UBUNTU_C_SSH}:/home/ansible/.ssh
+      - ${SHARED_FOLDER}/shared:/shared
+      networks:
+        labnet.io:
+            ipv4_address: 10.10.0.5 
+
+  ubuntu-d:
+      hostname: ubuntu-d
+      container_name: ubuntu-d
+      build: ./ubuntu/
+      command: tail -F anything
+      ports: 
+      - ${UBUNTU_D_APPSERVER_PORT}:8080
+      privileged: true
+      volumes:
+      - ${UBUNTU_D_SSH}:/home/ansible/.ssh
+      - ${SHARED_FOLDER}/shared:/shared
+      networks:
+        labnet.io:
+            ipv4_address: 10.10.0.6 
 
 networks:
   labnet.io:
     name: labnet.io
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.10.0.0/16
+         gateway: 10.10.0.1
